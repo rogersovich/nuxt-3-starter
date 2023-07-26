@@ -1,14 +1,11 @@
-type CharactersResults = {
-  characters: {
-    results: {
-      id: string,
-      name: string,
-      image: string,
-      status: string,
-      species: string,
-      location: {
-        name: string
-      }
-    }[]
-  }
+interface BaseResponse<T>  {
+  info: InfoResponse
+  results: T
+}
+
+type InfoResponse = {
+  count: number
+  pages: number
+  next: string
+  prev: string
 }

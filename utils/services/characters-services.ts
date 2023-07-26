@@ -1,17 +1,32 @@
-export const fetchCharacters = async ({ page }: { page: number }) => {
-  const env = useRuntimeConfig();
-  const pageProps = toRef(page);
-  console.log(page)
-  return await useAsyncData(
+export const fetchCharacters = async ({
+  page,
+  server = false,
+}: {
+  page: number
+  server?: boolean
+}) => {
+  const env = useRuntimeConfig()
+  const pageProps = toRef(page)
+
+  const { data, pending, status } = await useAsyncData<
+    BaseResponse<CharacterResponse[]>
+  >(
     "characters",
     () =>
-      $fetch(env.API_SECRET + "/character", {
+      $fetch(env.public.API_SECRET + "/character", {
         params: {
-          page: pageProps,
+          page: pageProps.value,
         },
       }),
     {
       watch: [pageProps],
+      server: server,
     }
-  );
-};
+  )
+
+  return {
+    data,
+    pending,
+    status,
+  }
+}

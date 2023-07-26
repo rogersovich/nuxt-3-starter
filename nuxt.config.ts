@@ -1,14 +1,14 @@
-import { defineNuxtConfig } from "nuxt/config";
+import { defineNuxtConfig } from "nuxt/config"
 
 export default defineNuxtConfig({
-  modules: [ "@nuxt/image", "@nuxtjs/tailwindcss"],
+  modules: ["@nuxt/image", "@nuxtjs/tailwindcss"],
   devtools: { enabled: true },
   runtimeConfig: {
     // The private keys which are only available server-side
     API_SECRET: process.env.API_SECRET || "https://rickandmortyapi.com/api",
     // Keys within public are also exposed client-side
     public: {
-      apiBase: "/api",
+      API_SECRET: process.env.API_SECRET || "https://rickandmortyapi.com/api",
     },
   },
   imports: {
@@ -20,4 +20,4 @@ export default defineNuxtConfig({
   image: {
     domains: ["rickandmortyapi.com/"],
   },
-});
+})
