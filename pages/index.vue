@@ -28,8 +28,9 @@ const isDark = computed({
 </script>
 
 <template>
-  <div class="bg-white dark:bg-slate-900">
-    <div class="flex items-center justify-between bg-white dark:bg-slate-900 p-3 shadow sticky top-0 left-0 z-10">
+  <div class="bg-white dark:bg-gray-900">
+    <div
+      class="flex items-center justify-between p-3 sticky top-0 left-0 z-50 backdrop-blur border-b border-gray-200 dark:border-gray-800 bg-white/75 dark:bg-gray-900/75">
       <div class="font-bold text-xl">
         Nuxt 3 Starter
       </div>
@@ -45,9 +46,9 @@ const isDark = computed({
     </div>
     <div v-else>
 
-      <div class="flex items-center justify-center py-4">
+      <div class="h-[400px] w-[100%] mt-4 px-6 overflow-y-auto">
         <ClientOnly>
-          <EasyDataTable class="w-[600px]" :headers="headers" :items="data?.results" hide-footer>
+          <EasyDataTable :headers="headers" :items="data?.results" hide-footer>
             <template #item-image="{ image }">
               <nuxt-img :src="image" height="100" width="100"></nuxt-img>
             </template>
@@ -63,7 +64,7 @@ const isDark = computed({
             pagination.page = 2;
           }
             " class="bg-blue-500 rounded text-white px-4 py-1 text-sm">
-            Next {{ pagination.page }}
+            Next
           </button>
         </div>
       </div>
