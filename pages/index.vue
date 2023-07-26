@@ -16,27 +16,19 @@ const headers: Header[] = [
   { text: "Gender", value: "gender" },
 ];
 
-const colorMode = useColorMode()
-const isDark = computed({
-  get() {
-    return colorMode.value === 'dark'
-  },
-  set() {
-    colorMode.preference = colorMode.value === 'dark' ? 'light' : 'dark'
-  }
-})
+const isDarks = useDarkMode()
 </script>
 
 <template>
-  <div class="bg-white dark:bg-gray-900">
+  <div class="background-app">
     <div
-      class="flex items-center justify-between p-3 sticky top-0 left-0 z-50 backdrop-blur border-b border-gray-200 dark:border-gray-800 bg-white/75 dark:bg-gray-900/75">
+      class="navbar">
       <div class="font-bold text-xl">
         Nuxt 3 Starter
       </div>
       <div>
-        <UButton color="primary" variant="ghost" @click="isDark = !isDark">
-          <UIcon :name="isDark ? 'i-la-moon' : 'i-la-sun'" class="w-6 h-6"></UIcon>
+        <UButton color="primary" variant="ghost" @click="isDarks = !isDarks">
+          <UIcon :name="isDarks ? 'i-la-moon' : 'i-la-sun'" class="w-6 h-6"></UIcon>
         </UButton>
 
       </div>
