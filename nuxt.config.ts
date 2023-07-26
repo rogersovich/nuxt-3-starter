@@ -1,11 +1,11 @@
 import { defineNuxtConfig } from "nuxt/config";
 
 export default defineNuxtConfig({
-  modules: ["@nuxtjs/apollo", "@nuxt/image", "@nuxtjs/tailwindcss"],
+  modules: [ "@nuxt/image", "@nuxtjs/tailwindcss"],
   devtools: { enabled: true },
   runtimeConfig: {
     // The private keys which are only available server-side
-    API_SECRET: process.env.API_SECRET || "234",
+    API_SECRET: process.env.API_SECRET || "https://rickandmortyapi.com/api",
     // Keys within public are also exposed client-side
     public: {
       apiBase: "/api",
@@ -16,13 +16,6 @@ export default defineNuxtConfig({
       "composables/*/index.{ts,js,mjs,mts}",
       "utils/*/index.{ts,js,mjs,mts}",
     ],
-  },
-  apollo: {
-    clients: {
-      default: {
-        httpEndpoint: "https://rickandmortyapi.com/graphql",
-      },
-    },
   },
   image: {
     domains: ["rickandmortyapi.com/"],

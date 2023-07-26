@@ -6,47 +6,7 @@ const pagination = reactive({
   page: 1,
 });
 
-const tables = ref<
-  | {
-      id: string;
-      name: string;
-      image: string;
-      status: string;
-      species: string;
-      location: {
-        name: string;
-      };
-    }[]
-  | null
->(null);
-
-const query = gql`
-  query getCharacters($page: Int!) {
-    characters(page: $page) {
-      info {
-        count
-        pages
-      }
-      results {
-        id
-        name
-        status
-        species
-        gender
-        image
-      }
-    }
-  }
-`;
-
-const { data } = await useAsyncQuery<CharactersResults>(query, pagination);
-
-const onPrev = async () => {
-  pagination.page += 1;
-
-  const { data } = await useAsyncQuery<CharactersResults>(query, pagination);
-  tables.value = data.value.characters.results;
-};
+const { data, pending } = await fetchCharacters({ page: pagination.page });
 
 const headers: Header[] = [
   { text: "Image", value: "image" },
@@ -63,7 +23,7 @@ const headers: Header[] = [
       <EasyDataTable
         class="w-[600px]"
         :headers="headers"
-        :items="tables ?? data.characters.results"
+        :items="data?.results"
         hide-footer
       >
         <template #item-image="{ image }">
@@ -78,10 +38,14 @@ const headers: Header[] = [
         Prev
       </button>
       <button
+        @click="
+          () => {
+            pagination.page = 2;
+          }
+        "
         class="bg-blue-500 rounded text-white px-4 py-1 text-sm"
-        @click="onPrev"
       >
-        Next
+        Next {{ pagination.page }}
       </button>
     </div>
   </div>
