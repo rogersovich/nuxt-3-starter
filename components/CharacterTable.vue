@@ -8,15 +8,9 @@ const { data, pending, onChangePaginate } = await fetchCharacters({
   server: true,
 });
 
-const onPrev = () => {
-  page.value--;
-  onChangePaginate(page.value);
-};
-
-const onNext = () => {
-  page.value++;
-  onChangePaginate(page.value);
-};
+watch(page, async (news, olds) => {
+  onChangePaginate(news);
+})
 
 const headers: Header[] = [
   { text: "Image", value: "image" },
@@ -31,41 +25,43 @@ const isDarks = useDarkMode();
 <template>
   <div v-if="pending">Loading...</div>
   <div v-else>
-    <div class="h-[400px] w-[100%] mt-4 px-6 overflow-y-auto">
+    <div class="h-[400px] w-[100%] mt-4 px-6 pb-4 overflow-y-auto">
       <ClientOnly fallback-tag="span" fallback="Loading Tables...">
-        <EasyDataTable
-          :headers="headers"
-          :items="data?.results"
-          :table-class-name="isDarks ? 'dark-table' : ''"
-          hide-footer
-        >
+        <EasyDataTable :headers="headers" :items="data?.results"
+          :table-class-name="isDarks ? 'dark-table' : 'light-table'" hide-footer>
           <template #item-image="{ image }">
             <nuxt-img :src="image" height="100" width="100"></nuxt-img>
           </template>
         </EasyDataTable>
       </ClientOnly>
     </div>
-    <div class="p-4"></div>
-    <div class="flex flex-row gap-2 items-center justify-center">
-      <UButton
-        icon="i-heroicons-chevron-left-20-solid"
-        color="gray"
-        :disabled="!!!data?.info.prev"
-        @click="onPrev"
-      ></UButton>
-      <UButton
-        icon="i-heroicons-chevron-right-20-solid"
-        color="gray"
-        :disabled="!!!data?.info.next"
-        @click="onNext"
-      ></UButton>
+    <div class="mt-4 px-6">
+      <div class="flex flex-row gap-2 items-center justify-end">
+        <UPagination v-model="page" :page-count="20" :max="7" :total="data?.info.count ?? 0" :ui="{
+          wrapper: 'flex items-center gap-1',
+          rounded: 'rounded min-w-[32px] justify-center'
+        }">
+          <template #prev="{ onClick }">
+            <UTooltip text="Previous page">
+              <UButton icon="i-heroicons-arrow-small-left-20-solid" color="gray" @click="onClick"
+                :disabled="!!!data?.info.prev" />
+            </UTooltip>
+          </template>
+          <template #next="{ onClick }">
+            <UTooltip text="Next page">
+              <UButton icon="i-heroicons-arrow-small-right-20-solid" color="gray" @click="onClick"
+                :disabled="!!!data?.info.next" />
+            </UTooltip>
+          </template>
+        </UPagination>
+      </div>
     </div>
   </div>
 </template>
 
 <style scoped>
 .dark-table {
-  --easy-table-border: 1px solid #1f2937;
+  --easy-table-border: 0px solid #1f2937;
   --easy-table-row-border: 1px solid #1f2937;
 
   --easy-table-header-font-size: 14px;
@@ -91,5 +87,9 @@ const isDarks = useDarkMode();
   --easy-table-scrollbar-corner-color: #111827;
 
   --easy-table-loading-mask-background-color: #111827;
+}
+
+.light-table {
+  --easy-table-border: none;  
 }
 </style>

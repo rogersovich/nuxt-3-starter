@@ -5,7 +5,9 @@ definePageMeta({
 });
 </script>
 <template>
-  <div>ssr</div>
+  <div>
+    <CharacterTable/>
+  </div>
 </template>
 
 <style scoped></style>
