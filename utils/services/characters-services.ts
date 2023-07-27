@@ -1,32 +1,36 @@
 export const fetchCharacters = async ({
-  page,
-  server = false,
+  pages,
+  server = true,
 }: {
-  page: number
-  server?: boolean
+  pages: number;
+  server?: boolean;
 }) => {
-  const env = useRuntimeConfig()
-  const pageProps = toRef(page)
+  const env = useRuntimeConfig();
+  const page = toRef(pages);
 
-  const { data, pending, status } = await useAsyncData<
-    BaseResponse<CharacterResponse[]>
-  >(
-    "characters",
+  const onChangePaginate = (currentPage: number) => {
+    page.value = currentPage
+  }
+
+  const {  data, pending, error, refresh } = await useAsyncData<BaseResponse<CharacterResponse[]>>(
+    'characters',
     () =>
-      $fetch(env.public.API_SECRET + "/character", {
+      $fetch(`${env.public.API_SECRET}/character`, {
         params: {
-          page: pageProps.value,
+          page: page.value,
         },
       }),
     {
-      watch: [pageProps],
-      server: server,
+      watch: [page],
+      server: server
     }
-  )
+  );
 
   return {
     data,
     pending,
-    status,
-  }
-}
+    error,
+    refresh,
+    onChangePaginate
+  };
+};
