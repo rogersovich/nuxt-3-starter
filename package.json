@@ -19,6 +19,8 @@
     "nuxt": "^3.6.5"
   },
   "dependencies": {
-    "vue3-easy-data-table": "^1.5.47"
+    "vee-validate": "^4.10.8",
+    "vue3-easy-data-table": "^1.5.47",
+    "yup": "^1.2.0"
   }
 }
