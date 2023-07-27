@@ -1,6 +1,6 @@
 export const fetchCharacters = async ({
   pages,
-  server = true,
+  server = false,
 }: {
   pages: number;
   server?: boolean;

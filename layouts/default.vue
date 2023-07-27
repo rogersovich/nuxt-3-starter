@@ -3,8 +3,6 @@ const isDarks = useDarkMode();
 
 const route = useRoute();
 
-console.log(route.name);
-
 useHead({
   title: `${route.meta.title}`,
   meta: [

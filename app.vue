@@ -4,6 +4,7 @@ const layout = "default";
 
 <template>
   <NuxtLayout :name="layout">
+    <NuxtLoadingIndicator />
     <NuxtPage />
   </NuxtLayout>
 </template>

@@ -43,3 +43,8 @@
     @apply grid grid-cols-3;
   }
 }
+
+html,
+body {
+  font-family: "Montserrat", sans-serif !important;
+}

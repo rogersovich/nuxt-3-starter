@@ -1,7 +1,7 @@
 export const OPTION_CARDS = [
   {
     key: 'mode-client',
-    title: 'Mode Client Side',
+    title: 'Mode Client',
     icon: 'i-heroicons-beaker',
     route: '/mode-client'
   },

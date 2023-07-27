@@ -1,7 +1,7 @@
-import { defineNuxtConfig } from "nuxt/config"
+import { defineNuxtConfig } from "nuxt/config";
 
 export default defineNuxtConfig({
-  modules: ["@nuxt/image", "@nuxthq/ui"],
+  modules: ["@nuxt/image", "@nuxthq/ui", "@nuxtjs/google-fonts"],
   devtools: { enabled: true },
   runtimeConfig: {
     API_SECRET: process.env.API_SECRET || "https://rickandmortyapi.com/api",
@@ -26,8 +26,17 @@ export default defineNuxtConfig({
     configPath: "~/tailwind.config.ts",
   },
   ui: {
-    icons: [
-      'la'
-    ]
-  }
-})
+    icons: ["la"],
+  },
+  googleFonts: {
+    subsets: 'greek',
+    download: true,
+    inject: true,
+    families: {
+      Roboto: true,
+      Monoton: true,
+      Montserrat: true,
+      "Ysabeau+Infant": [400, 500],
+    },
+  },
+});
