@@ -3,16 +3,7 @@ const isDarks = useDarkMode();
 
 const route = useRoute();
 
-// const { title } = route.meta.title;
-
-// const titlePage = ref(title)
-
 console.log(route.name);
-
-watch(route, async (newItem, oldItem) => {
-  console.log(newItem);
-  console.log(oldItem);
-});
 
 useHead({
   title: `${route.meta.title}`,
