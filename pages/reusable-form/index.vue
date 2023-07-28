@@ -20,6 +20,7 @@ const { handleSubmit } = useForm({
 const form = reactive({
   name: "",
   password: "",
+  desc: "",
 });
 
 const onSubmit = handleSubmit((values) => {
@@ -41,6 +42,15 @@ const onSubmit = handleSubmit((values) => {
               placeholder="e.g Dimas Roger"
             >
             </FieldText>
+          </div>
+          <div class="col-span-6">
+            <FieldTextArea
+              v-model="form.desc"
+              label="Fullname"
+              name="desc"
+              placeholder="e.g Dimas Roger"
+            >
+            </FieldTextArea>
           </div>
           <div class="col-span-6">
             <FieldText

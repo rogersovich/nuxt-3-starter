@@ -14,17 +14,21 @@ const props = defineProps({
     default: "Input Field",
     type: String,
   },
-  type: {
-    default: "text",
-    type: String,
-  },
-  loading: {
-    default: false,
-    type: Boolean,
-  },
   disabled: {
     default: false,
     type: Boolean,
+  },
+  autoresize: {
+    default: false,
+    type: Boolean,
+  },
+  resize: {
+    default: false,
+    type: Boolean,
+  },
+  rows: {
+    default: 2,
+    type: Number,
   },
   variant: {
     default: "outline",
@@ -44,7 +48,7 @@ const props = defineProps({
   },
 });
 
-const { value, errorMessage } = useField<string | number>(
+const { value, errorMessage } = useField<string>(
   () => props.name,
   undefined,
   {
@@ -67,24 +71,20 @@ const slots = useSlots();
         },
       }"
     >
-      <UInput
+      <UTextarea
         v-model="value"
         :color="color"
-        :loading="loading"
         :placeholder="placeholder"
         :variant="variant"
         :size="size"
-        :type="type"
         :disabled="disabled"
+        :resize="resize"
+        :autoresize="autoresize"
+        :rows="rows"
         :ui="{ icon: { trailing: { pointer: '' } } }"
       >
-        <template #leading v-if="slots.leading">
-          <slot name="leading"></slot>
-        </template>
-        <template #trailing v-if="slots.trailing">
-          <slot name="trailing"></slot>
-        </template>
-      </UInput>
+        
+      </UTextarea>
     </UFormGroup>
   </div>
 </template>
