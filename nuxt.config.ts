@@ -35,8 +35,7 @@ export default defineNuxtConfig({
     families: {
       Roboto: true,
       Monoton: true,
-      Montserrat: true,
-      "Ysabeau+Infant": [400, 500],
+      Montserrat: [300, 400, 500, 600, 700, 800],
     },
   },
 });
