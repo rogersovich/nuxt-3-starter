@@ -5,6 +5,8 @@
     "build": "nuxt build",
     "dev": "nuxt dev",
     "generate": "nuxt generate",
+    "cleanup": "nuxt clean",
+    "analyze": "nuxt analyze ",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare"
   },
