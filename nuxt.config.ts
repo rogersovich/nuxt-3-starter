@@ -3,6 +3,7 @@ import { defineNuxtConfig } from "nuxt/config"
 export default defineNuxtConfig({
   modules: ["@nuxt/image", "@nuxthq/ui", "@nuxtjs/google-fonts"],
   devtools: { enabled: true },
+  sourcemap: false,
   runtimeConfig: {
     API_SECRET: process.env.API_SECRET || "https://rickandmortyapi.com/api",
     public: {
