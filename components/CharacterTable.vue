@@ -39,7 +39,7 @@ const isDarks = useDarkMode()
               :key="name"
               :src="image"
               loading="lazy"
-              placeholder="assets/images/ngeteh_asu.png"
+              placeholder="ngeteh_asu.png"
               width="100"
               height="100"
             ></nuxt-img>
