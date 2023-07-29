@@ -3,13 +3,13 @@
   "private": true,
   "scripts": {
     "build": "nuxt build",
-    "build:production": "set NODE_OPTIONS=--max_old_space_size=8096 && nuxt build",
     "dev": "nuxt dev",
     "generate": "nuxt generate",
-    "cleanup": "nuxt clean",
+    "clean": "nuxt clean",
     "analyze": "nuxt analyze ",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare"
+    "postinstall": "nuxt prepare",
+    "serve-static": "npx serve .output/public"
   },
   "devDependencies": {
     "@iconify-json/la": "^1.1.4",

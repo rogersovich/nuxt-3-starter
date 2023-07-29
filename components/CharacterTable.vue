@@ -1,15 +1,15 @@
 <script setup lang="ts">
-import { Header } from "vue3-easy-data-table";
+import { Header } from "vue3-easy-data-table"
 
-const page = ref(1);
+const page = ref(1)
 
 const { data, pending, onChangePaginate } = await fetchCharacters({
   pages: page.value,
   server: true,
-});
+})
 
 watch(page, async (news, olds) => {
-  onChangePaginate(news);
+  onChangePaginate(news)
 })
 
 const headers: Header[] = [
@@ -18,39 +18,65 @@ const headers: Header[] = [
   { text: "Status", value: "status", sortable: true },
   { text: "Species", value: "species" },
   { text: "Gender", value: "gender" },
-];
+]
 
-const isDarks = useDarkMode();
+const isDarks = useDarkMode()
 </script>
 <template>
   <div v-if="pending">Loading...</div>
   <div v-else>
     <div class="h-[400px] w-[100%] mt-4 px-6 pb-4 overflow-y-auto">
       <ClientOnly fallback-tag="span" fallback="Loading Tables...">
-        <EasyDataTable :headers="headers" :items="data?.results"
-          :table-class-name="isDarks ? 'dark-table' : 'light-table'" hide-footer>
-          <template #item-image="{ image }">
-            <nuxt-img :src="image" height="100" width="100"></nuxt-img>
+        <EasyDataTable
+          :headers="headers"
+          :items="data?.results"
+          :table-class-name="isDarks ? 'dark-table' : 'light-table'"
+          hide-footer
+        >
+          <template #item-image="{ image, name }">
+            <nuxt-img
+              :alt="name"
+              :key="name"
+              :src="image"
+              loading="lazy"
+              placeholder="This Image still loading"
+              width="100"
+              height="100"
+            ></nuxt-img>
           </template>
         </EasyDataTable>
       </ClientOnly>
     </div>
     <div class="mt-4 px-6">
       <div class="flex flex-row gap-2 items-center justify-end">
-        <UPagination v-model="page" :page-count="20" :max="7" :total="data?.info.count ?? 0" :ui="{
-          wrapper: 'flex items-center gap-1',
-          rounded: 'rounded min-w-[32px] justify-center'
-        }">
+        <UPagination
+          v-model="page"
+          :page-count="20"
+          :max="7"
+          :total="data?.info.count ?? 0"
+          :ui="{
+            wrapper: 'flex items-center gap-1',
+            rounded: 'rounded min-w-[32px] justify-center',
+          }"
+        >
           <template #prev="{ onClick }">
             <UTooltip text="Previous page">
-              <UButton icon="i-heroicons-arrow-small-left-20-solid" color="gray" @click="onClick"
-                :disabled="!!!data?.info.prev" />
+              <UButton
+                icon="i-heroicons-arrow-small-left-20-solid"
+                color="gray"
+                @click="onClick"
+                :disabled="!!!data?.info.prev"
+              />
             </UTooltip>
           </template>
           <template #next="{ onClick }">
             <UTooltip text="Next page">
-              <UButton icon="i-heroicons-arrow-small-right-20-solid" color="gray" @click="onClick"
-                :disabled="!!!data?.info.next" />
+              <UButton
+                icon="i-heroicons-arrow-small-right-20-solid"
+                color="gray"
+                @click="onClick"
+                :disabled="!!!data?.info.next"
+              />
             </UTooltip>
           </template>
         </UPagination>
@@ -90,6 +116,6 @@ const isDarks = useDarkMode();
 }
 
 .light-table {
-  --easy-table-border: none;  
+  --easy-table-border: none;
 }
 </style>
