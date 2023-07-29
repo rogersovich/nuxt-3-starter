@@ -3,7 +3,7 @@
   "private": true,
   "scripts": {
     "build": "nuxt build",
-    "build:production": "export NODE_OPTIONS=--max_old_space_size=8096 && nuxt build",
+    "build:production": "set NODE_OPTIONS=--max_old_space_size=8096 && nuxt build",
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "cleanup": "nuxt clean",
