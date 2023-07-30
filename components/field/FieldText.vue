@@ -63,7 +63,7 @@ const slots = useSlots();
       :error="errorMessage"
       :ui="{
         label: {
-          base: 'text-base font-semibold',
+          base: 'text-sm font-semibold tracking-wide',
         },
       }"
     >

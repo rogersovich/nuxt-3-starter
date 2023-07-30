@@ -1,4 +1,4 @@
-import * as yup from 'yup';
+import * as yup from "yup"
 
 // export const schemaValidationRegister = {
 //   company_name: yup.string().required('Company Name is required'),
@@ -24,7 +24,10 @@ import * as yup from 'yup';
 // };
 
 export const schemaValidationText = {
-  name: yup
-    .string()
-    .required('Name is required'),
-};
+  name: yup.string().required("Name is required"),
+}
+
+export const schemaValidationlogin = {
+  email: yup.string().required("email is required").email(),
+  password: yup.string().required("Password is required").min(6),
+}

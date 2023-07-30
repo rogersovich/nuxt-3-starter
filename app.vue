@@ -6,5 +6,6 @@ const layout = "default";
   <NuxtLayout :name="layout">
     <NuxtLoadingIndicator />
     <NuxtPage />
+    <UNotifications />
   </NuxtLayout>
 </template>

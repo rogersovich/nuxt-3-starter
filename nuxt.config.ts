@@ -1,11 +1,23 @@
 import { defineNuxtConfig } from "nuxt/config"
 
 export default defineNuxtConfig({
-  modules: ["@nuxt/image", "@nuxthq/ui", "@nuxtjs/google-fonts"],
+  modules: [
+    "@nuxt/image",
+    "@nuxthq/ui",
+    "@nuxtjs/google-fonts",
+    "@sidebase/nuxt-auth",
+  ],
+  auth: {
+    isEnabled: true,
+    globalAppMiddleware: true,
+    // @ts-expect-error
+    origin: process.env.AUTH_ORIGIN
+  },
   devtools: { enabled: true },
   sourcemap: false,
   runtimeConfig: {
     API_SECRET: process.env.API_SECRET || "https://rickandmortyapi.com/api",
+    AUTH_SECRET: process.env.AUTH_SECRET,
     public: {
       API_SECRET: process.env.API_SECRET || "https://rickandmortyapi.com/api",
     },

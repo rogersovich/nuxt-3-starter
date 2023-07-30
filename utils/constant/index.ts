@@ -17,4 +17,10 @@ export const OPTION_CARDS = [
     icon: "i-heroicons-document-text",
     route: "/reusable-form",
   },
+  {
+    key: "auth",
+    title: "Auth",
+    icon: "i-heroicons-document-text",
+    route: "/auth",
+  },
 ]

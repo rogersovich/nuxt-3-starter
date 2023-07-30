@@ -1,14 +1,55 @@
 <script setup lang="ts">
-const isDarks = useDarkMode();
+const isDarks = useDarkMode()
 
-const route = useRoute();
+const route = useRoute()
 
 useHead({
   title: `${route.meta.title}`,
   meta: [
     { name: "title", property: "og:title", content: `${route.meta.title}` },
   ],
-});
+})
+
+const { signOut } = useAuth()
+
+const toggleDarkMode = () => {
+  return useDarkMode()
+}
+
+const items = [
+  [
+    {
+      label: "ben@example.com",
+      slot: "account",
+      disabled: true,
+    },
+  ],
+  [
+    {
+      label: "Settings",
+      icon: "i-heroicons-cog-8-tooth",
+    },
+    {
+      label: "Dark Mode",
+      icon: isDarks ? 'i-la-moon' : 'i-la-sun',
+      click: () => {
+        toggleDarkMode().value = !isDarks
+      }
+    },
+    
+  ],
+  [
+  {
+      label: "Sign out",
+      icon: "i-heroicons-arrow-left-on-rectangle",
+      click: () => {
+        signOut({
+          callbackUrl: '/auth'
+        })
+      },
+    },
+  ]
+]
 </script>
 <template>
   <div class="background-app">
@@ -30,13 +71,32 @@ useHead({
           {{ route.meta.title }}
         </div>
       </div>
-      <div>
-        <UButton color="primary" variant="ghost" @click="isDarks = !isDarks">
-          <UIcon
-            :name="isDarks ? 'i-la-moon' : 'i-la-sun'"
-            class="w-6 h-6"
-          ></UIcon>
-        </UButton>
+      <div class="fcc gap-3">
+        <UDropdown
+          :items="items"
+          :ui="{ item: { disabled: 'cursor-text select-text' } }"
+          :popper="{ placement: 'bottom-start' }"
+        >
+          <UAvatar size="sm" alt="Benjamin Canac"> </UAvatar>
+
+          <template #account="{ item }">
+            <div class="text-left">
+              <p>Signed in as</p>
+              <p class="truncate font-medium text-gray-900 dark:text-white">
+                {{ item.label }}
+              </p>
+            </div>
+          </template>
+
+          <template #item="{ item }">
+            <span class="truncate">{{ item.label }}</span>
+
+            <UIcon
+              :name="item.icon"
+              class="flex-shrink-0 h-4 w-4 text-gray-400 dark:text-gray-500 ms-auto"
+            />
+          </template>
+        </UDropdown>
       </div>
     </div>
     <slot />

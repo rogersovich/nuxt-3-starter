@@ -2,6 +2,7 @@
 definePageMeta({
   title: "Home Page",
   desc: "This is Description of Home Page",
+  auth: false
 });
 </script>
 
