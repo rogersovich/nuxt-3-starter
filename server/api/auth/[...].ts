@@ -1,36 +1,48 @@
+import { fetchLogin } from "./../../../utils/services/auth-services"
 import { NuxtAuthHandler } from "#auth"
 import CredentialsProvider from "next-auth/providers/credentials"
 
 export default NuxtAuthHandler({
   secret: useRuntimeConfig().AUTH_SECRET,
+  debug: true,
   pages: {
     signIn: "/auth",
   },
   callbacks: {
-    signIn(params) {
-      console.log({ params })
-      console.log(params.credentials)
+    signIn() {
       return true
+    },
+    async session({ session, token }) {
+      session.user = token
+      return session
+    },
+    async jwt({ token, user }) {
+      return {
+        ...token,
+        ...user,
+      }
     },
   },
   providers: [
     // @ts-expect-error
     CredentialsProvider.default({
       name: "Credentials",
-      authorize(credentials: any) {
-        const user = {
-          email: "dimas@gmail.com",
-          password: "123456",
+      credentials: {
+        email: {
+          label: "Email",
+          type: "email",
+        },
+        password: { label: "Password", type: "password" },
+      },
+      async authorize(credentials: any) {
+        const credentialDetails = {
+          email: credentials.email,
+          password: credentials.password,
         }
 
-        if (
-          credentials?.email === user.email &&
-          credentials?.password === user.password
-        ) {
-          return user
-        } else {
-          return false
-        }
+        return await fetchLogin({
+          formData: credentialDetails,
+        })
       },
     }),
   ],

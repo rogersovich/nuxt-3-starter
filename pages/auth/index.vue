@@ -27,19 +27,11 @@ type TLoginScheme = {
 }
 
 const form = reactive<TLoginScheme>({
-  email: "dimas@gmail.com",
-  password: "dsfdsfdsfdds",
+  email: "john@mail.com",
+  password: "changeme",
 })
 
 const onSubmit = handleSubmit((values: TLoginScheme) => {
-  // const data = fetchLogin({
-  //   formData: {
-  //     email: "dimas@gmail.com",
-  //     password: "123456",
-  //   },
-  // })
-
-  // console.log(data)
   signIn("credentials", {
     email: values.email,
     password: values.password,
@@ -49,8 +41,10 @@ const onSubmit = handleSubmit((values: TLoginScheme) => {
     if (res?.error == null) {
       router.push("/auth/locked")
     } else {
+      const err = JSON.parse(res.error)._data
       toast.add({
-        title: "Error",
+        title: err.message,
+        description: `Error: ${err.message}, StatusCode: ${err.statusCode}`,
         icon: "i-heroicons-x-mark-20-solid",
         color: "red",
         timeout: 5000,
