@@ -11,15 +11,16 @@ export default defineNuxtConfig({
     isEnabled: true,
     globalAppMiddleware: true,
     // @ts-expect-error
-    origin: process.env.AUTH_ORIGIN
+    origin: process.env.AUTH_ORIGIN,
   },
   devtools: { enabled: true },
   sourcemap: false,
   runtimeConfig: {
-    API_SECRET: process.env.API_SECRET || "https://rickandmortyapi.com/api",
+    API_SECRET: process.env.API_SECRET,
     AUTH_SECRET: process.env.AUTH_SECRET,
     public: {
-      API_SECRET: process.env.API_SECRET || "https://rickandmortyapi.com/api",
+      API_PLATZI: process.env.API_PLATZI,
+      API_SECRET: process.env.API_SECRET,
     },
   },
   experimental: {

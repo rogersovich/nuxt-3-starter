@@ -15,6 +15,7 @@ definePageMeta({
 const { signIn } = useAuth()
 
 const toast = useToast()
+const router = useRouter()
 
 const { handleSubmit } = useForm({
   validationSchema: yup.object(schemaValidationlogin),
@@ -26,11 +27,19 @@ type TLoginScheme = {
 }
 
 const form = reactive<TLoginScheme>({
-  email: "",
-  password: "",
+  email: "dimas@gmail.com",
+  password: "dsfdsfdsfdds",
 })
 
 const onSubmit = handleSubmit((values: TLoginScheme) => {
+  // const data = fetchLogin({
+  //   formData: {
+  //     email: "dimas@gmail.com",
+  //     password: "123456",
+  //   },
+  // })
+
+  // console.log(data)
   signIn("credentials", {
     email: values.email,
     password: values.password,
@@ -38,12 +47,13 @@ const onSubmit = handleSubmit((values: TLoginScheme) => {
     redirect: false,
   }).then((res: any) => {
     if (res?.error == null) {
-      console.log(res)
+      router.push("/auth/locked")
     } else {
       toast.add({
         title: "Error",
-        icon: "i-heroicons-check-circle",
-        color: "primary",
+        icon: "i-heroicons-x-mark-20-solid",
+        color: "red",
+        timeout: 5000,
       })
     }
   })

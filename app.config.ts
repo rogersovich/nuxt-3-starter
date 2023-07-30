@@ -5,5 +5,9 @@ export default defineAppConfig({
     tooltip: {
       base: "visible h-6 px-2 py-1 text-xs font-normal truncate",
     },
+    notifications: {
+      position: "top-0 right-0",
+      color: "bg-red-500",
+    },
   },
 })

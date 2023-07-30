@@ -22,6 +22,7 @@ export default NuxtAuthHandler({
           email: "dimas@gmail.com",
           password: "123456",
         }
+
         if (
           credentials?.email === user.email &&
           credentials?.password === user.password
