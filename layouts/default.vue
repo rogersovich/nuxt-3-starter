@@ -1,25 +1,29 @@
 <script setup lang="ts">
-const isDarks = useDarkMode()
+const isDarks = useDarkMode();
 
-const route = useRoute()
+const route = useRoute();
 
 useHead({
   title: `${route.meta.title}`,
   meta: [
     { name: "title", property: "og:title", content: `${route.meta.title}` },
   ],
-})
+});
 
-const { signOut } = useAuth()
+const { signOut } = useAuth();
 
 const toggleDarkMode = () => {
-  return useDarkMode()
-}
+  return useDarkMode();
+};
+
+const { getSession } = useAuth();
+
+const { user } = await getSession();
 
 const items = [
   [
     {
-      label: "ben@example.com",
+      label: user?.name ?? "Not Login",
       slot: "account",
       disabled: true,
     },
@@ -31,25 +35,25 @@ const items = [
     },
     {
       label: "Dark Mode",
-      icon: isDarks ? 'i-la-moon' : 'i-la-sun',
+      icon: isDarks ? "i-la-moon" : "i-la-sun",
       click: () => {
-        toggleDarkMode().value = !isDarks
-      }
-    },
-    
-  ],
-  [
-  {
-      label: "Sign out",
-      icon: "i-heroicons-arrow-left-on-rectangle",
-      click: () => {
-        signOut({
-          callbackUrl: '/auth'
-        })
+        toggleDarkMode().value = !isDarks;
       },
     },
-  ]
-]
+  ],
+  [
+    {
+      label: "Sign out",
+      icon: "i-heroicons-arrow-left-on-rectangle",
+      disabled: !!!user,
+      click: () => {
+        signOut({
+          callbackUrl: "/auth",
+        });
+      },
+    },
+  ],
+];
 </script>
 <template>
   <div class="background-app">
@@ -74,7 +78,7 @@ const items = [
       <div class="fcc gap-3">
         <UDropdown
           :items="items"
-          :ui="{ item: { disabled: 'cursor-text select-text' } }"
+          :ui="{ item: { disabled: 'cursor-text select-text opacity-50' } }"
           :popper="{ placement: 'bottom-start' }"
         >
           <UAvatar size="sm" alt="Benjamin Canac"> </UAvatar>
@@ -89,8 +93,10 @@ const items = [
           </template>
 
           <template #item="{ item }">
-            <span class="truncate">{{ item.label }}</span>
-
+            <span class="truncate text-gray-900 dark:text-white">{{
+              item.label
+            }}</span>
+        
             <UIcon
               :name="item.icon"
               class="flex-shrink-0 h-4 w-4 text-gray-400 dark:text-gray-500 ms-auto"

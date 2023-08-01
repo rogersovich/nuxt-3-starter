@@ -2,6 +2,7 @@
 definePageMeta({
   title: "Server Side Page",
   desc: "This is Description of Server Side Page",
+  auth: false
 })
 
 const page = ref(1)

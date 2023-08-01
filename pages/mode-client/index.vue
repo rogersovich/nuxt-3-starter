@@ -2,6 +2,7 @@
 definePageMeta({
   title: "Client Side Page",
   desc: "This is Description of Client Side Page",
+  auth: false
 });
 </script>
 <template>

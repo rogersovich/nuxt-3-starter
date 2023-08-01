@@ -5,6 +5,7 @@ import { useForm } from "vee-validate";
 definePageMeta({
   title: "Reusable Form",
   desc: "This is Description of Reusable Form",
+  auth: false
 });
 
 const showPassword = ref(true);
