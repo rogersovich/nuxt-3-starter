@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import * as yup from "yup"
-import { useForm } from "vee-validate"
+import * as yup from "yup";
+import { useForm } from "vee-validate";
 
 definePageMeta({
   title: "Auth",
@@ -9,27 +9,27 @@ definePageMeta({
     unauthenticatedOnly: true,
     navigateAuthenticatedTo: "/",
   },
-})
+});
 
 // Handle Login from use auth
-const { signIn } = useAuth()
+const { signIn } = useAuth();
 
-const toast = useToast()
-const router = useRouter()
+const toast = useToast();
+const router = useRouter();
 
 const { handleSubmit } = useForm({
   validationSchema: yup.object(schemaValidationlogin),
-})
+});
 
 type TLoginScheme = {
-  email: string
-  password: string | number
-}
+  email: string;
+  password: string | number;
+};
 
 const form = reactive<TLoginScheme>({
   email: "john@mail.com",
   password: "changeme",
-})
+});
 
 const onSubmit = handleSubmit((values: TLoginScheme) => {
   signIn("credentials", {
@@ -39,19 +39,19 @@ const onSubmit = handleSubmit((values: TLoginScheme) => {
     redirect: false,
   }).then((res: any) => {
     if (res?.error == null) {
-      router.push("/auth/locked")
+      navigateTo("/auth/locked");
     } else {
-      const err = JSON.parse(res.error)._data
+      const err = JSON.parse(res.error)._data;
       toast.add({
         title: err.message,
         description: `Error: ${err.message}, StatusCode: ${err.statusCode}`,
         icon: "i-heroicons-x-mark-20-solid",
         color: "red",
         timeout: 5000,
-      })
+      });
     }
-  })
-})
+  });
+});
 </script>
 <template>
   <div class="p-6">

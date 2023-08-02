@@ -1,2 +1,2 @@
-export { fetchLogin } from "./auth-services"
+export { fetchLogin, fetchMe } from "./auth-services"
 export { fetchCharacters } from "./characters-services"

@@ -11,7 +11,7 @@ export default defineNuxtConfig({
     isEnabled: true,
     globalAppMiddleware: true,
     // @ts-expect-error
-    origin: process.env.AUTH_ORIGIN,
+    origin: process.env.AUTH_ORIGIN
   },
   devtools: { enabled: true },
   sourcemap: false,

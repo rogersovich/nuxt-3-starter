@@ -1,6 +1,6 @@
-import { fetchLogin } from "./../../../utils/services/auth-services"
-import { NuxtAuthHandler } from "#auth"
-import CredentialsProvider from "next-auth/providers/credentials"
+import { fetchLogin } from "./../../../utils/services/auth-services";
+import { NuxtAuthHandler } from "#auth";
+import CredentialsProvider from "next-auth/providers/credentials";
 
 export default NuxtAuthHandler({
   secret: useRuntimeConfig().AUTH_SECRET,
@@ -8,19 +8,42 @@ export default NuxtAuthHandler({
   pages: {
     signIn: "/auth",
   },
+  jwt: {
+    // 1 Hour
+    maxAge: 36000,
+  },
+  session: {
+    // 1 Hour
+    maxAge: 36000,
+  },
   callbacks: {
     signIn() {
-      return true
+      return true;
     },
     async session({ session, token }) {
-      session.user = token
-      return session
+      if (token) {
+        session.user = token as any;
+      }
+      return session;
     },
-    async jwt({ token, user }) {
+    async jwt({ token, user, account }) {
+      if (account && user) {
+        return {
+          accessToken: "123",
+          ...user,
+        };
+      }
+
+      // console.log({ token });
+      // Return previous token if the access token has not expired yet
+      //  if (Date.now() < token.accessTokenExpires) {
+      //   return token
+      // }
+
       return {
         ...token,
         ...user,
-      }
+      };
     },
   },
   providers: [
@@ -38,12 +61,12 @@ export default NuxtAuthHandler({
         const credentialDetails = {
           email: credentials.email,
           password: credentials.password,
-        }
+        };
 
         return await fetchLogin({
           formData: credentialDetails,
-        })
+        });
       },
     }),
   ],
-})
+});
