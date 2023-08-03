@@ -7,13 +7,13 @@ definePageMeta({
 // const { data } = useAuth();
 // console.log(data.value);
 
-const {data} = await fetchMe();
+// const {data} = await fetchMe();
 
+// console.log(data);
+
+const headers = useRequestHeaders(["cookie"]) as HeadersInit;
+const { data } = await useFetch("/api/session", { headers });
 console.log(data);
-
-// const headers = useRequestHeaders(['cookie']) as HeadersInit
-// const { data: token } = await useFetch('/api/token', { headers })
-// console.log(token.value)
 </script>
 <template>
   <div>

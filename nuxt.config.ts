@@ -1,4 +1,4 @@
-import { defineNuxtConfig } from "nuxt/config"
+import { defineNuxtConfig } from "nuxt/config";
 
 export default defineNuxtConfig({
   modules: [
@@ -6,12 +6,17 @@ export default defineNuxtConfig({
     "@nuxthq/ui",
     "@nuxtjs/google-fonts",
     "@sidebase/nuxt-auth",
+    "@pinia/nuxt",
+    '@pinia-plugin-persistedstate/nuxt',
   ],
+  pinia: {
+    autoImports: ["defineStore", "definePiniaStore", "acceptHMRUpdate"],
+  },
   auth: {
     isEnabled: true,
     globalAppMiddleware: true,
     // @ts-expect-error
-    origin: process.env.AUTH_ORIGIN
+    origin: process.env.AUTH_ORIGIN,
   },
   devtools: { enabled: true },
   sourcemap: false,
@@ -30,6 +35,7 @@ export default defineNuxtConfig({
     dirs: [
       "composables/*/index.{ts,js,mjs,mts}",
       "utils/*/index.{ts,js,mjs,mts}",
+      "stores"
     ],
   },
   image: {
@@ -58,4 +64,4 @@ export default defineNuxtConfig({
       Montserrat: [300, 400, 500, 600, 700, 800],
     },
   },
-})
+});

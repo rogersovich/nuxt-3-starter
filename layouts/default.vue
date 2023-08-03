@@ -2,6 +2,7 @@
 const isDarks = useDarkMode();
 
 const route = useRoute();
+const authStore = useAuthStore();
 
 useHead({
   title: `${route.meta.title}`,
@@ -16,14 +17,10 @@ const toggleDarkMode = () => {
   return useDarkMode();
 };
 
-const { getSession } = useAuth();
-
-const { user } = await getSession();
-
 const items = [
   [
     {
-      label: user?.name ?? "Not Login",
+      label: authStore.user.name ?? "Not Login",
       slot: "account",
       disabled: true,
     },
@@ -45,11 +42,14 @@ const items = [
     {
       label: "Sign out",
       icon: "i-heroicons-arrow-left-on-rectangle",
-      disabled: !!!user,
       click: () => {
-        signOut({
-          callbackUrl: "/auth",
-        });
+        if (!!authStore.user.token) {
+          authStore.removeToken();
+          authStore.removeUser();
+          signOut({
+            callbackUrl: "/auth",
+          });
+        }
       },
     },
   ],
@@ -96,7 +96,7 @@ const items = [
             <span class="truncate text-gray-900 dark:text-white">{{
               item.label
             }}</span>
-        
+
             <UIcon
               :name="item.icon"
               class="flex-shrink-0 h-4 w-4 text-gray-400 dark:text-gray-500 ms-auto"

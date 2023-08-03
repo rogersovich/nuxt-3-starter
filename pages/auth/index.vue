@@ -12,10 +12,10 @@ definePageMeta({
 });
 
 // Handle Login from use auth
-const { signIn } = useAuth();
+const { signIn, getSession } = useAuth();
 
+const authStore = useAuthStore();
 const toast = useToast();
-const router = useRouter();
 
 const { handleSubmit } = useForm({
   validationSchema: yup.object(schemaValidationlogin),
@@ -37,8 +37,12 @@ const onSubmit = handleSubmit((values: TLoginScheme) => {
     password: values.password,
     callbackUrl: "/",
     redirect: false,
-  }).then((res: any) => {
+  }).then(async (res: any) => {
     if (res?.error == null) {
+      const data = await getSession();
+      authStore.setToken(data.user.token);
+      authStore.setUser(data.user);
+      
       navigateTo("/auth/locked");
     } else {
       const err = JSON.parse(res.error)._data;
