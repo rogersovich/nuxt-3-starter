@@ -1,3 +1,5 @@
+import { parse, stringify } from "zipson";
+
 type TTokenState = {
   accessToken: string;
   refreshToken: string;
@@ -24,6 +26,10 @@ export const useAuthStore = defineStore("auth", {
     paths: ["user"],
     debug: true,
     storage: persistedState.localStorage,
+    serializer: {
+      deserialize: (value: any) => parse(value),
+      serialize: (value: any) => stringify(value),
+    },
   },
   getters: {
     accessToken: (state) => state.user.token.accessToken,

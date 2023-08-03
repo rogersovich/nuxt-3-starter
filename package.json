@@ -29,7 +29,8 @@
     "pinia": "^2.1.6",
     "vee-validate": "^4.10.8",
     "vue3-easy-data-table": "^1.5.47",
-    "yup": "^1.2.0"
+    "yup": "^1.2.0",
+    "zipson": "^0.2.12"
   },
   "overrides": {
     "vue": "latest"
