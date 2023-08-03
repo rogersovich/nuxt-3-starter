@@ -15,7 +15,7 @@ export const fetchCharacters = async ({
   const {  data, pending, error, refresh } = await useAsyncData<BaseResponse<CharacterResponse[]>>(
     'characters',
     () =>
-      $fetch(`${env.public.API_SECRET}/character`, {
+      $fetch(`${env.public.API_RICK_MORTY}/character`, {
         params: {
           page: page.value,
         },

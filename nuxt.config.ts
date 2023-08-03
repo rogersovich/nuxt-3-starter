@@ -1,4 +1,4 @@
-import { defineNuxtConfig } from "nuxt/config";
+import { defineNuxtConfig } from "nuxt/config"
 
 export default defineNuxtConfig({
   modules: [
@@ -19,11 +19,11 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   sourcemap: false,
   runtimeConfig: {
-    API_SECRET: process.env.API_SECRET,
-    AUTH_SECRET: process.env.AUTH_SECRET,
+    AUTH_COOKIE: process.env.AUTH_COOKIE,
     public: {
+      AUTH_COOKIE: process.env.AUTH_COOKIE,
       API_PLATZI: process.env.API_PLATZI,
-      API_SECRET: process.env.API_SECRET,
+      API_RICK_MORTY: process.env.API_RICK_MORTY,
     },
   },
   experimental: {
@@ -64,4 +64,4 @@ export default defineNuxtConfig({
       Montserrat: [300, 400, 500, 600, 700, 800],
     },
   },
-});
+})

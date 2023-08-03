@@ -43,7 +43,7 @@ const items = [
       label: "Sign out",
       icon: "i-heroicons-arrow-left-on-rectangle",
       click: () => {
-        if (!!authStore.user.token) {
+        if (!!authStore.access_token) {
           authStore.removeToken();
           authStore.removeUser();
           navigateTo("/auth");

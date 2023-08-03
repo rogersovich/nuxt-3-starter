@@ -53,6 +53,8 @@ const onSubmit = handleSubmit(async (values: TLoginScheme) => {
 </script>
 <template>
   <div class="p-6">
+
+    {{  authStore.user }}
     <div class="grid-12 gap-4">
       <div class="col-span-6">
         <UCard>

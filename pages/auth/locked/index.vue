@@ -5,20 +5,17 @@ definePageMeta({
   middleware: "auth",
 });
 
-// const { data } = useAuth();
-// console.log(data.value);
 
-// const {data} = await fetchMe();
+const { data } = await fetchMe();
 
-// console.log(data);
 
-// const headers = useRequestHeaders(["cookie"]) as HeadersInit;
-// const { data } = await useFetch("/api/session", { headers });
-// console.log(data);
 </script>
 <template>
   <div>
     this locked page
+    <div>
+      NAME: {{ data.name }} {{ data.email }}
+    </div>
   </div>
 </template>
 
