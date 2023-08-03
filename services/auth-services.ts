@@ -1,29 +1,13 @@
-export const fetchLogin = async ({ formData }: { formData: any }) => {
-  const env = useRuntimeConfig();
-
-  return await $fetch(env.public.API_PLATZI + "/auth/login", {
+export const login = (formData: TLoginScheme) => {
+  const customFetch = useBaseFetch();
+  return customFetch<TokenResponse>("/auth/login", {
     method: "POST",
     headers: {
       Accept: "application/json",
       "Content-Type": "application/json",
     },
     body: JSON.stringify(formData),
-  })
-    .then((item: any) => {
-      let data = {
-        name: "Super Admin",
-        email: formData?.email,
-        token: {
-          accessToken: item.access_token,
-          refreshToken: item.refresh_token,
-        },
-      };
-      return data;
-    })
-    .catch((err) => {
-      // console.log(err.status)
-      throw new Error(JSON.stringify(err.response));
-    });
+  });
 };
 
 export const fetchMe = async () => {
@@ -34,7 +18,7 @@ export const fetchMe = async () => {
   const { data, pending } = await useFetch(
     env.public.API_PLATZI + "/auth/profile",
     {
-      headers: headers
+      headers: headers,
     }
   );
 

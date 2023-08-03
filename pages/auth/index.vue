@@ -5,14 +5,10 @@ import { useForm } from "vee-validate";
 definePageMeta({
   title: "Auth",
   desc: "This is Description of Auth",
-  auth: {
-    unauthenticatedOnly: true,
-    navigateAuthenticatedTo: "/",
-  },
+  middleware: "auth",
 });
 
 // Handle Login from use auth
-const { signIn, getSession } = useAuth();
 
 const authStore = useAuthStore();
 const toast = useToast();
@@ -21,40 +17,38 @@ const { handleSubmit } = useForm({
   validationSchema: yup.object(schemaValidationlogin),
 });
 
-type TLoginScheme = {
-  email: string;
-  password: string | number;
-};
-
 const form = reactive<TLoginScheme>({
   email: "john@mail.com",
   password: "changeme",
 });
 
-const onSubmit = handleSubmit((values: TLoginScheme) => {
-  signIn("credentials", {
+const onSubmit = handleSubmit(async (values: TLoginScheme) => {
+  const { data, error } = await useAsyncData("login", () => login(values));
+
+  if (error.value) {
+    return toast.add({
+      title: "Error",
+      description: error.value.message,
+      icon: "i-heroicons-x-mark-20-solid",
+      color: "red",
+      timeout: 5000,
+    });
+  }
+
+  authStore.setToken(data.value);
+  authStore.setUser({
+    name: "Super Admin",
     email: values.email,
-    password: values.password,
-    callbackUrl: "/",
-    redirect: false,
-  }).then(async (res: any) => {
-    if (res?.error == null) {
-      const data = await getSession();
-      authStore.setToken(data.user.token);
-      authStore.setUser(data.user);
-      
-      navigateTo("/auth/locked");
-    } else {
-      const err = JSON.parse(res.error)._data;
-      toast.add({
-        title: err.message,
-        description: `Error: ${err.message}, StatusCode: ${err.statusCode}`,
-        icon: "i-heroicons-x-mark-20-solid",
-        color: "red",
-        timeout: 5000,
-      });
-    }
   });
+
+  toast.add({
+    title: "Success",
+    description: "Success Login",
+    icon: "i-heroicons-check-circle",
+    color: "green",
+    timeout: 3000,
+  });
+  navigateTo("/auth/locked");
 });
 </script>
 <template>

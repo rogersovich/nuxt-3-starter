@@ -7,7 +7,10 @@ export default defineAppConfig({
     },
     notifications: {
       position: "top-0 right-0",
-      color: "bg-red-500",
+      color: {
+        red: "bg-red-500",
+        green: "bg-green-500",
+      },
     },
   },
-})
+});

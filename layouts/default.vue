@@ -11,7 +11,7 @@ useHead({
   ],
 });
 
-const { signOut } = useAuth();
+// const { signOut } = useAuth();
 
 const toggleDarkMode = () => {
   return useDarkMode();
@@ -46,9 +46,7 @@ const items = [
         if (!!authStore.user.token) {
           authStore.removeToken();
           authStore.removeUser();
-          signOut({
-            callbackUrl: "/auth",
-          });
+          navigateTo("/auth");
         }
       },
     },
@@ -76,33 +74,35 @@ const items = [
         </div>
       </div>
       <div class="fcc gap-3">
-        <UDropdown
-          :items="items"
-          :ui="{ item: { disabled: 'cursor-text select-text opacity-50' } }"
-          :popper="{ placement: 'bottom-start' }"
-        >
-          <UAvatar size="sm" alt="Benjamin Canac"> </UAvatar>
+        <ClientOnly>
+          <UDropdown
+            :items="items"
+            :ui="{ item: { disabled: 'cursor-text select-text opacity-50' } }"
+            :popper="{ placement: 'bottom-start' }"
+          >
+            <UAvatar size="sm" alt="Benjamin Canac"> </UAvatar>
 
-          <template #account="{ item }">
-            <div class="text-left">
-              <p>Signed in as</p>
-              <p class="truncate font-medium text-gray-900 dark:text-white">
-                {{ item.label }}
-              </p>
-            </div>
-          </template>
+            <template #account="{ item }">
+              <div class="text-left">
+                <p>Signed in as</p>
+                <p class="truncate font-medium text-gray-900 dark:text-white">
+                  {{ item.label }}
+                </p>
+              </div>
+            </template>
 
-          <template #item="{ item }">
-            <span class="truncate text-gray-900 dark:text-white">{{
-              item.label
-            }}</span>
+            <template #item="{ item }">
+              <span class="truncate text-gray-900 dark:text-white">{{
+                item.label
+              }}</span>
 
-            <UIcon
-              :name="item.icon"
-              class="flex-shrink-0 h-4 w-4 text-gray-400 dark:text-gray-500 ms-auto"
-            />
-          </template>
-        </UDropdown>
+              <UIcon
+                :name="item.icon"
+                class="flex-shrink-0 h-4 w-4 text-gray-400 dark:text-gray-500 ms-auto"
+              />
+            </template>
+          </UDropdown>
+        </ClientOnly>
       </div>
     </div>
     <slot />

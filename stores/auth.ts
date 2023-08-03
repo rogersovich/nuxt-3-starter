@@ -1,5 +1,3 @@
-import { parse, stringify } from "zipson";
-
 type TTokenState = {
   accessToken: string;
   refreshToken: string;
@@ -8,8 +6,11 @@ type TTokenState = {
 type TUserState = {
   name: string;
   email: string;
-  token: TTokenState;
+  token?: TTokenState;
 };
+
+const now = new Date();
+const expiresDate = new Date(now.getTime() + 2 * 60 * 1000); // 2 minutes
 
 export const useAuthStore = defineStore("auth", {
   state: () => {
@@ -25,11 +26,9 @@ export const useAuthStore = defineStore("auth", {
     key: "auth-zcief123",
     paths: ["user"],
     debug: true,
-    storage: persistedState.localStorage,
-    serializer: {
-      deserialize: (value: any) => parse(value),
-      serialize: (value: any) => stringify(value),
-    },
+    storage: persistedState.cookiesWithOptions({
+      expires: expiresDate,
+    }),
   },
   getters: {
     accessToken: (state) => state.user.token.accessToken,

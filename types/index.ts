@@ -9,3 +9,9 @@ type InfoResponse = {
   next: string
   prev: string
 }
+
+type ErrorResponse = {
+  statusCode: number
+  message: string
+}
+

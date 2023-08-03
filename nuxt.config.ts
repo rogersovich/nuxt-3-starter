@@ -5,18 +5,16 @@ export default defineNuxtConfig({
     "@nuxt/image",
     "@nuxthq/ui",
     "@nuxtjs/google-fonts",
-    "@sidebase/nuxt-auth",
     "@pinia/nuxt",
-    '@pinia-plugin-persistedstate/nuxt',
+    "@pinia-plugin-persistedstate/nuxt",
   ],
   pinia: {
-    autoImports: ["defineStore", "definePiniaStore", "acceptHMRUpdate"],
-  },
-  auth: {
-    isEnabled: true,
-    globalAppMiddleware: true,
-    // @ts-expect-error
-    origin: process.env.AUTH_ORIGIN,
+    autoImports: [
+      "defineStore",
+      "definePiniaStore",
+      "storeToRefs",
+      "acceptHMRUpdate",
+    ],
   },
   devtools: { enabled: true },
   sourcemap: false,
@@ -35,7 +33,9 @@ export default defineNuxtConfig({
     dirs: [
       "composables/*/index.{ts,js,mjs,mts}",
       "utils/*/index.{ts,js,mjs,mts}",
-      "stores"
+      "types",
+      "services",
+      "stores",
     ],
   },
   image: {

@@ -4,21 +4,10 @@ definePageMeta({
   desc: "This is Description of Home Page",
   auth: false,
 });
-
-const hello = [
-  {
-    name: "hello",
-  },
-];
 </script>
 
 <template>
   <div class="p-6">
-    <div>
-      {{
-       JSON.stringify(hello)
-      }}
-    </div>
     <div class="grid-12 gap-4">
       <div
         class="col-span-3"
