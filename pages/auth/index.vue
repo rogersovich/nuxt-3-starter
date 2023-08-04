@@ -33,7 +33,6 @@ const onSubmit = handleSubmit(async (values: TLoginScheme) => {
       timeout: 5000,
     });
   }
-  console.log(data.value.data);
 
   authStore.setToken(data.value.data);
   authStore.setUser({
