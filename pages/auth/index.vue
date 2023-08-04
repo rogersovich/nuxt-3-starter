@@ -18,13 +18,12 @@ const { handleSubmit } = useForm({
 });
 
 const form = reactive<TLoginScheme>({
-  email: "john@mail.com",
-  password: "changeme",
+  username: "ichsan",
+  password: "P@ssw0rd",
 });
 
 const onSubmit = handleSubmit(async (values: TLoginScheme) => {
   const { data, error } = await useAsyncData("login", () => login(values));
-
   if (error.value) {
     return toast.add({
       title: "Error",
@@ -34,11 +33,12 @@ const onSubmit = handleSubmit(async (values: TLoginScheme) => {
       timeout: 5000,
     });
   }
+  console.log(data.value.data);
 
-  authStore.setToken(data.value);
+  authStore.setToken(data.value.data);
   authStore.setUser({
     name: "Super Admin",
-    email: values.email,
+    username: values.username,
   });
 
   toast.add({
@@ -53,8 +53,7 @@ const onSubmit = handleSubmit(async (values: TLoginScheme) => {
 </script>
 <template>
   <div class="p-6">
-
-    {{  authStore.user }}
+    {{ authStore.user }}
     <div class="grid-12 gap-4">
       <div class="col-span-6">
         <UCard>
@@ -65,7 +64,11 @@ const onSubmit = handleSubmit(async (values: TLoginScheme) => {
             <form @submit="onSubmit">
               <div class="grid-1 gap-4">
                 <div class="col-span-1">
-                  <FieldText v-model="form.email" label="Email" name="email" />
+                  <FieldText
+                    v-model="form.username"
+                    label="Username"
+                    name="username"
+                  />
                 </div>
                 <div class="col-span-1">
                   <FieldText
@@ -94,7 +97,9 @@ const onSubmit = handleSubmit(async (values: TLoginScheme) => {
           </div>
         </UCard>
       </div>
-      <div class="col-span-6"></div>
+      <div class="col-span-6">
+        <NuxtLink to="/auth/locked"> To Locked Page </NuxtLink>
+      </div>
     </div>
   </div>
 </template>

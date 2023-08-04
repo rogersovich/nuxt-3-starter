@@ -28,6 +28,6 @@ export const schemaValidationText = {
 }
 
 export const schemaValidationlogin = {
-  email: yup.string().required("email is required").email(),
+  username: yup.string().required("username is required"),
   password: yup.string().required("Password is required").min(6),
 }

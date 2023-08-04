@@ -5,17 +5,16 @@ definePageMeta({
   middleware: "auth",
 });
 
-
-const { data } = await fetchMe();
-
+const { data, error, pending } = await fetchSession();
 
 </script>
 <template>
   <div>
-    this locked page
-    <div>
-      NAME: {{ data.name }} {{ data.email }}
-    </div>
+    <NuxtLink to="/auth"> Back </NuxtLink>
+    <div>this locked page</div>
+    <div v-if="pending">Is Loading</div>
+    <div v-else-if="error">got erorr</div>
+    <div v-else>Login As : {{ data.data.full_name }}</div>
   </div>
 </template>
 

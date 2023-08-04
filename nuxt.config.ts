@@ -1,4 +1,4 @@
-import { defineNuxtConfig } from "nuxt/config"
+import { defineNuxtConfig } from "nuxt/config";
 
 export default defineNuxtConfig({
   modules: [
@@ -7,6 +7,7 @@ export default defineNuxtConfig({
     "@nuxtjs/google-fonts",
     "@pinia/nuxt",
     "@pinia-plugin-persistedstate/nuxt",
+    "@vueuse/nuxt",
   ],
   pinia: {
     autoImports: [
@@ -24,6 +25,7 @@ export default defineNuxtConfig({
       AUTH_COOKIE: process.env.AUTH_COOKIE,
       API_PLATZI: process.env.API_PLATZI,
       API_RICK_MORTY: process.env.API_RICK_MORTY,
+      API_LMS: process.env.API_LMS,
     },
   },
   experimental: {
@@ -64,4 +66,4 @@ export default defineNuxtConfig({
       Montserrat: [300, 400, 500, 600, 700, 800],
     },
   },
-})
+});

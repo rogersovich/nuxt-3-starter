@@ -1,26 +1,46 @@
-import { CookieRef } from "nuxt/app"
-
 export const useBaseFetch = () => {
-  const secret = useRuntimeConfig().public.AUTH_COOKIE
-  const cookie: CookieRef<{ user: TUserState, access_token: string }> = useCookie(secret)
-  const token = cookie.value ? cookie.value.access_token : null
+  const ls: { user: TUserState; token: TTokenState } = JSON.parse(
+    localStorage.getItem("auth-zcief123")
+  );
+  const { token } = storeToRefs(useAuthStore());
+  const authStore = useAuthStore();
+
+  const access_token = token.value ? token.value?.token : ls.token.token;
 
   const fetch = $fetch.create({
-    baseURL: useRuntimeConfig().public.API_PLATZI,
+    baseURL: useRuntimeConfig().public.API_LMS,
     headers: {
       Accept: "application/json",
       "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${access_token}`,
     },
-    onRequestError(context) {
-      console.warn(context)
-      console.log("HEHEHEHEH")
+    onResponseError({ request, response, options }) {
+      if (response.status == 401) {
+        $fetch<BaseResponse<TokenResponse>>(
+          useRuntimeConfig().public.API_LMS + "/auth/refresh-token",
+          {
+            method: "POST",
+            body: JSON.stringify({
+              refresh_token: token.value?.refresh_token,
+            }),
+          }
+        )
+          .then((res) => {
+            const token = JSON.parse(res.data.token);
+            console.log(token)
+            authStore.setToken(token);
+          })
+          .catch((err) => {
+            if (err.response.status == 401) {
+              authStore.removeToken();
+              authStore.removeUser();
+              navigateTo("/auth");
+            }
+          });
+      }
+      // console.log("RESPON RERRER  ");
     },
-    onResponseError(context) {
-      console.warn(context)
-      console.log("RESPON RERRER  ")
-    },
-  })
+  });
 
-  return fetch
-}
+  return fetch;
+};

@@ -12,7 +12,7 @@ export const fetchCharacters = async ({
     page.value = currentPage
   }
 
-  const {  data, pending, error, refresh } = await useAsyncData<BaseResponse<CharacterResponse[]>>(
+  const {  data, pending, error, refresh } = await useAsyncData<BaseResponseRickMorty<CharacterResponse[]>>(
     'characters',
     () =>
       $fetch(`${env.public.API_RICK_MORTY}/character`, {

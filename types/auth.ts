@@ -1,28 +1,29 @@
 type TLoginScheme = {
-  email: string
+  username: string
   password: string | number
 }
 
 type TokenResponse = {
-  access_token: string
+  token: string
   refresh_token: string
 }
 
 type TTokenState = {
-  access_token: string
+  token: string
   refresh_token: string
 }
 
 type TUserState = {
   name: string
-  email: string
+  email?: string
+  username: string
 }
 
 type ProfileResponse = {
-  id: number
-  email: string
-  password: string
-  name: string
-  role: string
-  avatar: string
+  id: number;
+  full_name: string;
+  username: string;
+  profile_pict?: string;
+  email: string;
+  roleId: number;
 }

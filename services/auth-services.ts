@@ -1,28 +1,30 @@
 export const login = (formData: TLoginScheme) => {
-  return useBaseFetch()<TokenResponse>("/auth/login", {
+  return useBaseFetch()<BaseResponse<TokenResponse>>("/auth/login", {
     method: "POST",
     body: JSON.stringify(formData),
-  })
-}
+  });
+};
 
-export const fetchMe = async () => {
-  const { data, pending } = await useAsyncData("profile", () =>
-    useBaseFetch()<ProfileResponse>("/auth/profile"),
+export const fetchSession = async () => {
+  const { data, pending, error } = await useAsyncData(
+    "session",
+    () => useBaseFetch()<BaseResponse<ProfileResponse>>("/session"),
     {
-      server: true
+      server: false,
     }
-  )
+  );
   return {
     data,
-    pending
-  }
-}
+    pending,
+    error,
+  };
+};
 
-export const refreshToken = (token: string) => {
+export const fetchRefreshToken = (token: string) => {
   return useBaseFetch()<TokenResponse>("/auth/refresh-token", {
     method: "POST",
     body: JSON.stringify({
-      refreshToken: token
+      refreshToken: token,
     }),
-  })
-}
+  });
+};
