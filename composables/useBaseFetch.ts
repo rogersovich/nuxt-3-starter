@@ -14,31 +14,34 @@ export const useBaseFetch = () => {
       "Content-Type": "application/json",
       Authorization: `Bearer ${access_token}`,
     },
-    onResponseError({ request, response, options }) {
+    async onResponseError({ response, options, request }) {
+      // console.log(options.baseURL);
       if (response.status == 401) {
-        $fetch<BaseResponse<TokenResponse>>(
-          useRuntimeConfig().public.API_LMS + "/auth/refresh-token",
-          {
-            method: "POST",
-            body: JSON.stringify({
-              refresh_token: token.value?.refresh_token,
-            }),
-          }
-        )
-          .then((res) => {
-            const token = JSON.parse(res.data.token);
-            console.log(token)
-            authStore.setToken(token);
-          })
-          .catch((err) => {
-            if (err.response.status == 401) {
-              authStore.removeToken();
-              authStore.removeUser();
-              navigateTo("/auth");
+        // console.log("KUCING", authStore.token.refresh_token);
+
+        const { data, error } = await useAsyncData("refresh_token", () =>
+          $fetch<BaseResponse<TokenResponse>>(
+            useRuntimeConfig().public.API_LMS + "/auth/refresh-token",
+            {
+              method: "POST",
+              body: JSON.stringify({
+                refresh_token: authStore.token.refresh_token,
+              }),
             }
-          });
+          )
+        );
+
+        if (error.value) {
+          console.log("HEHEH", error);
+          authStore.removeToken();
+          authStore.removeUser();
+          navigateTo("/auth");
+        }
+
+        const token = JSON.parse(data.value.data.token);
+        console.log("HEHEH", token);
+        authStore.setToken(token);
       }
-      // console.log("RESPON RERRER  ");
     },
   });
 
