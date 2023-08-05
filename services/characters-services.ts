@@ -1,19 +1,21 @@
 export const fetchCharacters = async ({
   pages,
-  server = false,
+  server = true,
 }: {
-  pages: number;
-  server?: boolean;
+  pages: number
+  server?: boolean
 }) => {
-  const env = useRuntimeConfig();
-  const page = toRef(pages);
+  const env = useRuntimeConfig()
+  const page = toRef(pages)
 
   const onChangePaginate = (currentPage: number) => {
     page.value = currentPage
   }
 
-  const {  data, pending, error, refresh } = await useAsyncData<BaseResponseRickMorty<CharacterResponse[]>>(
-    'characters',
+  const { data, pending, error, refresh } = await useAsyncData<
+    BaseResponseRickMorty<CharacterResponse[]>
+  >(
+    "characters",
     () =>
       $fetch(`${env.public.API_RICK_MORTY}/character`, {
         params: {
@@ -22,15 +24,15 @@ export const fetchCharacters = async ({
       }),
     {
       watch: [page],
-      server: server
+      server: server,
     }
-  );
+  )
 
   return {
     data,
     pending,
     error,
     refresh,
-    onChangePaginate
-  };
-};
+    onChangePaginate,
+  }
+}

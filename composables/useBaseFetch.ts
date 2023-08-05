@@ -1,21 +1,22 @@
+import { useAuthCookieStore } from "./../stores/auth-cookie"
 export const useBaseFetch = () => {
-  const ls: { user: TUserState; token: TTokenState } = JSON.parse(
-    localStorage.getItem("auth-zcief123")
-  )
-  const { token } = storeToRefs(useAuthStore())
-  const authStore = useAuthStore()
+  const access_token = useCookie("secret-token")
+  const refresh_token = useCookie("secret-refresh-token")
 
-  const access_token = token.value ? token.value?.token : ls.token.token
+  const authCookieStore = useAuthCookieStore()
+
+  const store = useAuthCookieStore()
+
+  var bearerToken = process.server
+    ? `Bearer ${access_token.value}`
+    : `Bearer ${store.access_token}`
 
   const fetch = $fetch.create({
     baseURL: useRuntimeConfig().public.API_LMS,
     headers: {
       Accept: "application/json",
       "Content-Type": "application/json",
-      Authorization: `Bearer ${access_token}`,
-    },
-    async onRequest({ request, options }) {
-      console.log(request, options)
+      Authorization: bearerToken,
     },
     async onResponseError({ response, options, request }) {
       // console.log({ request })
@@ -26,19 +27,25 @@ export const useBaseFetch = () => {
             {
               method: "POST",
               body: JSON.stringify({
-                refresh_token: authStore.token.refresh_token,
+                refresh_token: refresh_token,
               }),
             }
           )
         )
 
         if (error.value) {
-          authStore.removeToken()
-          authStore.removeUser()
+          authCookieStore.removeUser()
           navigateTo("/auth")
         }
 
-        authStore.setToken(data.value.data)
+        useFetch("/api/set-cookie", {
+          method: "POST",
+          body: {
+            token: data.value.data.token,
+            refresh_token: data.value.data.refresh_token,
+          },
+          server: false,
+        })
 
         await $fetch(request, {
           method: "GET",
@@ -52,8 +59,6 @@ export const useBaseFetch = () => {
             reloadNuxtApp()
           })
           .catch(() => {
-            authStore.removeToken()
-            authStore.removeUser()
             navigateTo("/auth")
           })
       }

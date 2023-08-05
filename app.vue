@@ -4,7 +4,7 @@ const layout = "default";
 
 <template>
   <NuxtLayout :name="layout">
-    <NuxtLoadingIndicator />
+    <NuxtLoadingIndicator :duration="7000" />
     <NuxtPage />
     <UNotifications />
   </NuxtLayout>

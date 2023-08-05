@@ -1,7 +1,7 @@
 // const now = new Date()
 // const expiresDate = new Date(now.getTime() + 1 * 60 * 1000) // 2 minutes
 
-export const useAuthStore = defineStore("auth", {
+export const useAuthCookieStore = defineStore("auth-cookie", {
   state: () => {
     return {
       user: {
@@ -17,17 +17,12 @@ export const useAuthStore = defineStore("auth", {
   },
   persist: [
     {
-      key: "auth-zcief123",
+      key: "auth-user",
       paths: ["user", "token"],
       debug: true,
       storage: persistedState.localStorage,
     },
   ],
-  hydrate(state, initialState) {
-    // in this case we can completely ignore the initial state since we
-    // want to read the value from the browser
-    state.token = initialState.token
-  },
   getters: {
     access_token: (state) => state.token.token,
     refresh_token: (state) => state.token.refresh_token,
@@ -55,5 +50,5 @@ export const useAuthStore = defineStore("auth", {
 })
 
 if (import.meta.hot) {
-  import.meta.hot.accept(acceptHMRUpdate(useAuthStore, import.meta.hot))
+  import.meta.hot.accept(acceptHMRUpdate(useAuthCookieStore, import.meta.hot))
 }

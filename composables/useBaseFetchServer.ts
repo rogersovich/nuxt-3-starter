@@ -1,81 +1,78 @@
 export const useBaseFetchServer = ({
   url,
   header,
+  server = true,
 }: {
   url: string
   header?: HeadersInit
+  server?: boolean
 }) => {
-  // const ls: { user: TUserState; token: TTokenState } = JSON.parse(
-  //   localStorage.getItem("auth-zcief123")
-  // )
-  // const { token } = storeToRefs(useAuthStore())
+  const headers = useRequestHeaders(["cookie"])
+  const access_token = useCookie("secret-token")
+  const refresh_token = useCookie("secret-refresh-token")
 
-  const pinia = useNuxtApp().$pinia.state.value
-  const access_token = pinia.auth.token.token
-  console.log(useNuxtApp().$pinia.state.value)
+  const authCookieStore = useAuthCookieStore()
 
-  // const access_token = token.value ? token.value?.token : ls.token.token
-
-  // const fetch = $fetch.create({
-  //   baseURL: useRuntimeConfig().public.API_LMS,
-  //   headers: {
-  //     Accept: "application/json",
-  //     "Content-Type": "application/json",
-  //     Authorization: `Bearer ${access_token}`,
-  //   },
-  //   async onRequest({ request, options }) {
-  //     console.log(request, options)
-  //   },
-  //   async onResponseError({ response, options, request }) {
-  //     // console.log({ request })
-  //     if (response.status == 401) {
-  //       const { data, error } = await useAsyncData("refresh_token", () =>
-  //         $fetch<BaseResponse<TokenResponse>>(
-  //           useRuntimeConfig().public.API_LMS + "/auth/refresh-token",
-  //           {
-  //             method: "POST",
-  //             body: JSON.stringify({
-  //               refresh_token: authStore.token.refresh_token,
-  //             }),
-  //           }
-  //         )
-  //       )
-
-  //       if (error.value) {
-  //         authStore.removeToken()
-  //         authStore.removeUser()
-  //         navigateTo("/auth")
-  //       }
-
-  //       authStore.setToken(data.value.data)
-
-  //       await $fetch(request, {
-  //         method: "GET",
-  //         headers: {
-  //           Accept: "application/json",
-  //           "Content-Type": "application/json",
-  //           Authorization: `Bearer ${data.value.data.token}`,
-  //         },
-  //       })
-  //         .then(() => {
-  //           reloadNuxtApp()
-  //         })
-  //         .catch(() => {
-  //           authStore.removeToken()
-  //           authStore.removeUser()
-  //           navigateTo("/auth")
-  //         })
-  //     }
-  //   },
-  // })
+  var bearerToken = !access_token.value
+    ? headers.cookie
+    : `Bearer ${access_token.value}`
 
   return useFetch(url, {
     baseURL: useRuntimeConfig().public.API_LMS,
     headers: {
       Accept: "application/json",
       "Content-Type": "application/json",
-      Authorization: `Bearer ${access_token}`,
+      Authorization: bearerToken,
     },
-    server: true,
+    server: server,
+    lazy: true,
+    async onResponseError({ response, options, request }) {
+      if (response.status == 401) {
+        const { data, error } = await useAsyncData("refresh_token", () =>
+          $fetch<BaseResponse<TokenResponse>>(
+            useRuntimeConfig().public.API_LMS + "/auth/refresh-token",
+            {
+              method: "POST",
+              body: JSON.stringify({
+                refresh_token: refresh_token,
+              }),
+            }
+          )
+        )
+
+        if (error.value) {
+          authCookieStore.removeUser()
+          // useFetch("/api/delete-cookie", {
+          //   method: "DELETE",
+          //   server: false,
+          // })
+          navigateTo("/auth")
+        }
+
+        useFetch("/api/set-cookie", {
+          method: "POST",
+          body: {
+            token: data.value.data.token,
+            refresh_token: data.value.data.refresh_token,
+          },
+          server: false,
+        })
+
+        await $fetch(request, {
+          method: "GET",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${data.value.data.token}`,
+          },
+        })
+          .then(() => {
+            reloadNuxtApp()
+          })
+          .catch(() => {
+            navigateTo("/auth")
+          })
+      }
+    },
   })
 }

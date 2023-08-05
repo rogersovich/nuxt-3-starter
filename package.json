@@ -27,8 +27,10 @@
   },
   "dependencies": {
     "@pinia/nuxt": "^0.4.11",
+    "cookie-universal-nuxt": "^2.2.2",
     "next-auth": "^4.22.3",
     "pinia": "^2.1.6",
+    "universal-cookie": "^4.0.4",
     "vee-validate": "^4.10.8",
     "vue3-easy-data-table": "^1.5.47",
     "yup": "^1.2.0",

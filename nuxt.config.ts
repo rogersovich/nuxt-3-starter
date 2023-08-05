@@ -1,4 +1,4 @@
-import { defineNuxtConfig } from "nuxt/config";
+import { defineNuxtConfig } from "nuxt/config"
 
 export default defineNuxtConfig({
   modules: [
@@ -15,8 +15,16 @@ export default defineNuxtConfig({
       "definePiniaStore",
       "storeToRefs",
       "acceptHMRUpdate",
+      "skipHydrate",
     ],
   },
+  // ssr: true,
+  // routeRules: {
+  //   "/auth/**": {
+  //     ssr: true,
+  //   },
+  // },
+
   devtools: { enabled: true },
   sourcemap: false,
   runtimeConfig: {
@@ -30,6 +38,7 @@ export default defineNuxtConfig({
   },
   experimental: {
     writeEarlyHints: false,
+    componentIslands: true,
   },
   imports: {
     dirs: [
@@ -66,4 +75,4 @@ export default defineNuxtConfig({
       Montserrat: [300, 400, 500, 600, 700, 800],
     },
   },
-});
+})

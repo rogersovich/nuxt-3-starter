@@ -10,7 +10,8 @@ export const fetchSession = async () => {
     "session",
     () => useBaseFetch()<BaseResponse<ProfileResponse>>("/session"),
     {
-      server: false,
+      server: process.server,
+      lazy: true,
     }
   )
   return {

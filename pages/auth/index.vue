@@ -1,29 +1,30 @@
 <script setup lang="ts">
-import * as yup from "yup";
-import { useForm } from "vee-validate";
+import * as yup from "yup"
+import { useForm } from "vee-validate"
 
 definePageMeta({
   title: "Auth",
   desc: "This is Description of Auth",
   middleware: "auth",
-});
+})
 
 // Handle Login from use auth
 
-const authStore = useAuthStore();
-const toast = useToast();
+// const authStore = useAuthStore();
+const authStore = useAuthCookieStore()
+const toast = useToast()
 
 const { handleSubmit } = useForm({
   validationSchema: yup.object(schemaValidationlogin),
-});
+})
 
 const form = reactive<TLoginScheme>({
   username: "ichsan",
   password: "P@ssw0rd",
-});
+})
 
 const onSubmit = handleSubmit(async (values: TLoginScheme) => {
-  const { data, error } = await useAsyncData("login", () => login(values));
+  const { data: responseLogin, error } = await useAsyncData("login", () => login(values))
   if (error.value) {
     return toast.add({
       title: "Error",
@@ -31,28 +32,41 @@ const onSubmit = handleSubmit(async (values: TLoginScheme) => {
       icon: "i-heroicons-x-mark-20-solid",
       color: "red",
       timeout: 5000,
-    });
+    })
   }
 
-  authStore.setToken(data.value.data);
-  authStore.setUser({
-    name: "Super Admin",
-    username: values.username,
-  });
+  const {
+    pending,
+    error: errorSetCookie,
+  } = await useFetch("/api/set-cookie", {
+    method: "POST",
+    body: {
+      token: responseLogin.value.data.token,
+      refresh_token: responseLogin.value.data.refresh_token,
+    },
+    server: false,
+  })
 
-  toast.add({
-    title: "Success",
-    description: "Success Login",
-    icon: "i-heroicons-check-circle",
-    color: "green",
-    timeout: 3000,
-  });
-  navigateTo("/auth/locked");
-});
+  if (!pending.value && !errorSetCookie.value) {
+    authStore.setUser({
+      name: "Super Admin",
+      username: values.username,
+    })
+    authStore.setToken(responseLogin.value.data)
+
+    toast.add({
+      title: "Success",
+      description: "Success Login",
+      icon: "i-heroicons-check-circle",
+      color: "green",
+      timeout: 3000,
+    })
+    navigateTo("/auth/locked")
+  }
+})
 </script>
 <template>
   <div class="p-6">
-    {{ authStore.user }}
     <div class="grid-12 gap-4">
       <div class="col-span-6">
         <UCard>
@@ -97,7 +111,8 @@ const onSubmit = handleSubmit(async (values: TLoginScheme) => {
         </UCard>
       </div>
       <div class="col-span-6">
-        <NuxtLink to="/auth/locked"> To Locked Page </NuxtLink>
+        <NuxtLink to="/auth/locked" no-prefetch> No Prefetch </NuxtLink>
+        <NuxtLink to="/auth/locked" prefetch> Prefetch </NuxtLink>
       </div>
     </div>
   </div>
