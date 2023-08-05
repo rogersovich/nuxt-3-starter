@@ -33,8 +33,8 @@ export const useBaseFetch = () => {
         )
 
         if (error.value) {
-          authCookieStore.removeUser()
-          authCookieStore.removeToken()
+          store.removeUser()
+          store.removeToken()
           await useFetch("/api/delete-cookie", {
             method: "DELETE",
             server: false,
@@ -69,8 +69,8 @@ export const useBaseFetch = () => {
             refreshNuxtData("session") // use this if server side
           })
           .catch(async () => {
-            authCookieStore.removeUser()
-            authCookieStore.removeToken()
+            store.removeUser()
+            store.removeToken()
             await useFetch("/api/delete-cookie", {
               method: "DELETE",
               server: false,

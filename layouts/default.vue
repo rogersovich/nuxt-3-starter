@@ -1,21 +1,21 @@
 <script setup lang="ts">
-const isDarks = useDarkMode();
+const isDarks = useDarkMode()
 
-const route = useRoute();
-const authStore = useAuthStore();
+const route = useRoute()
+const authStore = useAuthCookieStore()
 
 useHead({
   title: `${route.meta.title}`,
   meta: [
     { name: "title", property: "og:title", content: `${route.meta.title}` },
   ],
-});
+})
 
 // const { signOut } = useAuth();
 
 const toggleDarkMode = () => {
-  return useDarkMode();
-};
+  return useDarkMode()
+}
 
 const items = [
   [
@@ -34,7 +34,7 @@ const items = [
       label: "Dark Mode",
       icon: isDarks ? "i-la-moon" : "i-la-sun",
       click: () => {
-        toggleDarkMode().value = !isDarks;
+        toggleDarkMode().value = !isDarks
       },
     },
   ],
@@ -42,16 +42,20 @@ const items = [
     {
       label: "Sign out",
       icon: "i-heroicons-arrow-left-on-rectangle",
-      click: () => {
+      click: async () => {
         if (!!authStore.access_token) {
-          authStore.removeToken();
-          authStore.removeUser();
-          navigateTo("/auth");
+          await useFetch("/api/delete-cookie", {
+            method: "DELETE",
+            server: false,
+          })
+          authStore.removeToken()
+          authStore.removeUser()
+          await navigateTo("/auth")
         }
       },
     },
   ],
-];
+]
 </script>
 <template>
   <div class="background-app">
