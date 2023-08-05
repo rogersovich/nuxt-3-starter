@@ -24,7 +24,9 @@ const form = reactive<TLoginScheme>({
 })
 
 const onSubmit = handleSubmit(async (values: TLoginScheme) => {
-  const { data: responseLogin, error } = await useAsyncData("login", () => login(values))
+  const { data: responseLogin, error } = await useAsyncData("login", () =>
+    login(values)
+  )
   if (error.value) {
     return toast.add({
       title: "Error",
@@ -35,24 +37,32 @@ const onSubmit = handleSubmit(async (values: TLoginScheme) => {
     })
   }
 
-  const {
-    pending,
-    error: errorSetCookie,
-  } = await useFetch("/api/set-cookie", {
+  const tokenEncrypt = EncryptCookie({
+    cookie: responseLogin.value.data.token,
+    secret: ENCRYPT_SECRET_TOKEN,
+  })
+  const refreshtokenEncrypt = EncryptCookie({
+    cookie:  responseLogin.value.data.refresh_token,
+    secret: ENCRYPT_SECRET_REFRESH_TOKEN,
+  })
+
+  const saveToken = {
+    token: tokenEncrypt,
+    refresh_token: refreshtokenEncrypt,
+  }
+
+  const { pending, error: errorSetCookie } = await useFetch("/api/set-cookie", {
     method: "POST",
-    body: {
-      token: responseLogin.value.data.token,
-      refresh_token: responseLogin.value.data.refresh_token,
-    },
+    body: saveToken,
     server: false,
   })
 
   if (!pending.value && !errorSetCookie.value) {
     authStore.setUser({
       name: "Super Admin",
-      username: values.username,
+      username: 'superadmin',
     })
-    authStore.setToken(responseLogin.value.data)
+    authStore.setToken(saveToken)
 
     toast.add({
       title: "Success",

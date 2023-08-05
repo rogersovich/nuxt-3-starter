@@ -5,18 +5,27 @@ export const useBaseFetch = () => {
 
   const store = useAuthCookieStore()
 
-  var bearerToken = process.server
-    ? `Bearer ${access_token.value}`
-    : `Bearer ${store.access_token}`
-
+  var bearerToken = process.server ? access_token.value : store.access_token
   var refreshToken = process.server ? refresh_token.value : store.refresh_token
+
+  const tokenDecrypt = DecryptCookie({
+    cookie: bearerToken ?? "",
+    secret: ENCRYPT_SECRET_TOKEN,
+  })
+
+  const refreshTokenDecrypt = DecryptCookie({
+    cookie: refreshToken ?? "",
+    secret: ENCRYPT_SECRET_REFRESH_TOKEN,
+  })
+  // console.log({ tokenDecrypt })
+  // console.log({ refreshTokenDecrypt })
 
   const fetch = $fetch.create({
     baseURL: useRuntimeConfig().public.API_LMS,
     headers: {
       Accept: "application/json",
       "Content-Type": "application/json",
-      Authorization: bearerToken,
+      Authorization: `Bearer ${tokenDecrypt}`,
     },
     async onResponseError({ response, options, request }) {
       if (response.status == 401) {
@@ -26,7 +35,7 @@ export const useBaseFetch = () => {
             {
               method: "POST",
               body: JSON.stringify({
-                refresh_token: refreshToken,
+                refresh_token: refreshTokenDecrypt,
               }),
             }
           )
@@ -42,12 +51,23 @@ export const useBaseFetch = () => {
           await navigateTo("/auth")
         }
 
+        const tokenEncrypt = EncryptCookie({
+          cookie: data.value.data.token,
+          secret: ENCRYPT_SECRET_TOKEN,
+        })
+        const refreshtokenEncrypt = EncryptCookie({
+          cookie: data.value.data.refresh_token,
+          secret: ENCRYPT_SECRET_REFRESH_TOKEN,
+        })
+
+        const saveToken = {
+          token: tokenEncrypt,
+          refresh_token: refreshtokenEncrypt,
+        }
+
         useFetch("/api/set-cookie", {
           method: "POST",
-          body: {
-            token: data.value.data.token,
-            refresh_token: data.value.data.refresh_token,
-          },
+          body: saveToken,
           server: false,
         })
 
@@ -64,7 +84,7 @@ export const useBaseFetch = () => {
               name: "Super Admin",
               username: "superadmin",
             })
-            store.setToken(data.value.data)
+            store.setToken(saveToken)
             // reloadNuxtApp() use this if client side
             refreshNuxtData("session") // use this if server side
           })

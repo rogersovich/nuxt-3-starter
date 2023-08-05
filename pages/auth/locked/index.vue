@@ -9,13 +9,19 @@ const cookie_encrypted = ref(null)
 
 const onEncryptCookie = () => {
   const cookie = EncryptCookie({
-    token: "heelloo",
+    cookie: {
+      hehehe: "heelloo",
+    },
+    secret: 'kucing',
   })
   console.log(cookie)
   cookie_encrypted.value = cookie
 }
 const onDecryptCookie = () => {
-  const cookie = DecryptCookie(cookie_encrypted.value)
+  const cookie = DecryptCookie({
+    cookie: cookie_encrypted.value,
+    secret: 'kucing-loncat'
+  })
   console.log(cookie)
 }
 </script>

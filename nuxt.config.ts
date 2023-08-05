@@ -47,6 +47,7 @@ export default defineNuxtConfig({
       "types",
       "services",
       "stores",
+      "constant",
     ],
   },
   image: {
