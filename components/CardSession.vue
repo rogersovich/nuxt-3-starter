@@ -10,7 +10,7 @@ const fetchAgain = () => {
   <div>
     <div v-if="pending">Is Loading</div>
     <div v-else-if="error">got erorr</div>
-    <div v-else>Login As : {{ data }}</div>
+    <div v-else>Login As : {{ data.data.email }}</div>
     <br />
     <UButton @click="fetchAgain"> Fetch Again </UButton>
   </div>

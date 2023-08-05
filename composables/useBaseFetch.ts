@@ -3,13 +3,13 @@ export const useBaseFetch = () => {
   const access_token = useCookie("secret-token")
   const refresh_token = useCookie("secret-refresh-token")
 
-  const authCookieStore = useAuthCookieStore()
-
   const store = useAuthCookieStore()
 
   var bearerToken = process.server
     ? `Bearer ${access_token.value}`
     : `Bearer ${store.access_token}`
+
+  var refreshToken = process.server ? refresh_token.value : store.refresh_token
 
   const fetch = $fetch.create({
     baseURL: useRuntimeConfig().public.API_LMS,
@@ -19,7 +19,6 @@ export const useBaseFetch = () => {
       Authorization: bearerToken,
     },
     async onResponseError({ response, options, request }) {
-      // console.log({ request })
       if (response.status == 401) {
         const { data, error } = await useAsyncData("refresh_token", () =>
           $fetch<BaseResponse<TokenResponse>>(
@@ -27,7 +26,7 @@ export const useBaseFetch = () => {
             {
               method: "POST",
               body: JSON.stringify({
-                refresh_token: refresh_token,
+                refresh_token: refreshToken,
               }),
             }
           )
@@ -35,7 +34,12 @@ export const useBaseFetch = () => {
 
         if (error.value) {
           authCookieStore.removeUser()
-          navigateTo("/auth")
+          authCookieStore.removeToken()
+          await useFetch("/api/delete-cookie", {
+            method: "DELETE",
+            server: false,
+          })
+          await navigateTo("/auth")
         }
 
         useFetch("/api/set-cookie", {
@@ -56,10 +60,22 @@ export const useBaseFetch = () => {
           },
         })
           .then(() => {
-            reloadNuxtApp()
+            store.setUser({
+              name: "Super Admin",
+              username: "superadmin",
+            })
+            store.setToken(data.value.data)
+            // reloadNuxtApp() use this if client side
+            refreshNuxtData("session") // use this if server side
           })
-          .catch(() => {
-            navigateTo("/auth")
+          .catch(async () => {
+            authCookieStore.removeUser()
+            authCookieStore.removeToken()
+            await useFetch("/api/delete-cookie", {
+              method: "DELETE",
+              server: false,
+            })
+            await navigateTo("/auth")
           })
       }
     },
